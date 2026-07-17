@@ -55,3 +55,34 @@ role: "student", isActive: true,
 enrolledCourse: { code: "ITELECT4", title: "IT Elective 4", units: 3, semester: "1st" },
 gpa: 1.25,
 };
+
+// ===== NEW ADDITIONS FOR PART 2 =====
+
+// 1. Generic Interface
+export interface ApiResponse<T> {
+  status: "success" | "error";
+  message: string;
+  data: T;
+}
+
+// 2. Generic Functions
+export function getFirst<T>(items: T[]): T | undefined {
+  return items[0];
+}
+
+export function getById<T extends { id: ID }>(items: T[], id: ID): T | undefined {
+  return items.find(item => item.id === id);
+}
+
+// 3. Utility Type Uses (at least TWO)
+export type UserUpdateInput = Partial<User>;
+export type CoursePreview = Pick<Course, "code" | "title">;
+export type OptionalSubmission = Partial<Submission>;
+
+// 4. Enum (at least ONE)
+export enum SubmissionStatus {
+  Pending = "PENDING",
+  Submitted = "SUBMITTED",
+  Graded = "GRADED",
+  Late = "LATE"
+}

@@ -70,3 +70,51 @@ return value; // TypeScript knows: it's a string
 console.log(processInput("hello")); // HELLO
 console.log(processInput(3.14159)); // 3.14
 console.log(formatDate(new Date())); // e.g. 7/4/2026
+
+// ===== DEMONSTRATING NEW ADDITIONS FOR PART 2 =====
+import {
+  getFirst,
+  getById,
+  SubmissionStatus
+} from "../types/index";
+import type {
+  ApiResponse,
+  UserUpdateInput,
+  CoursePreview
+} from "../types/index";
+
+// 1. ApiResponse<T> Generic Interface Demonstration
+const userResponse: ApiResponse<User> = {
+  status: "success",
+  message: "User profiles retrieved successfully",
+  data: student
+};
+console.log("ApiResponse demonstration:", userResponse);
+
+// 2. Generic Functions (getFirst and getById) Demonstration
+const numberList = [42, 100, 200];
+const firstNum = getFirst(numberList);
+console.log("getFirst (numbers) demonstration:", firstNum);
+
+const studentList: User[] = [
+  student,
+  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "instructor", isActive: true }
+];
+const searchedUser = getById(studentList, 2);
+console.log("getById (User with id = 2) demonstration:", searchedUser);
+
+// 3. Utility Types (Partial and Pick) Demonstration
+const userUpdate: UserUpdateInput = {
+  email: "juan.updated@example.com"
+};
+console.log("UserUpdateInput (Partial<User>) demonstration:", userUpdate);
+
+const coursePreview: CoursePreview = {
+  code: "ITELECT4",
+  title: "IT Elective 4"
+};
+console.log("CoursePreview (Pick<Course, 'code' | 'title'>) demonstration:", coursePreview);
+
+// 4. Enum (SubmissionStatus) Demonstration
+const currentStatus: SubmissionStatus = SubmissionStatus.Submitted;
+console.log("SubmissionStatus enum demonstration:", currentStatus);
