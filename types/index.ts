@@ -56,33 +56,38 @@ enrolledCourse: { code: "ITELECT4", title: "IT Elective 4", units: 3, semester: 
 gpa: 1.25,
 };
 
-// ===== NEW ADDITIONS FOR PART 2 =====
-
-// 1. Generic Interface
+// ===== GENERIC INTERFACE =====
+// ApiResponse<T> can wrap ANY data type -- every future GT reuses this
 export interface ApiResponse<T> {
-  status: "success" | "error";
-  message: string;
-  data: T;
+success: boolean;
+data: T;
+message?: string;
 }
 
-// 2. Generic Functions
-export function getFirst<T>(items: T[]): T | undefined {
-  return items[0];
-}
+// ===== UTILITY TYPES =====
+// Partial<T> -- every field becomes optional
+export type UserUpdate = Partial<User>;
+// Pick<T, K> -- keep ONLY the listed fields
+export type UserPreview = Pick<User, "id" | "name" | "role">;
+// Omit<T, K> -- keep every field EXCEPT the listed ones
+export type PublicUser = Omit<User, "email" | "isActive">;
+// Record<K, T> -- a fixed set of keys, each mapped to the same value type
+export type RoleCount = Record<
+"student" | "admin" | "instructor",
+number
+>;
 
-export function getById<T extends { id: ID }>(items: T[], id: ID): T | undefined {
-  return items.find(item => item.id === id);
-}
-
-// 3. Utility Type Uses (at least TWO)
-export type UserUpdateInput = Partial<User>;
-export type CoursePreview = Pick<Course, "code" | "title">;
-export type OptionalSubmission = Partial<Submission>;
-
-// 4. Enum (at least ONE)
+// ===== ENUMS =====
+// Regular enum -- exists at runtime; can be looped over or reverse-mapped
 export enum SubmissionStatus {
-  Pending = "PENDING",
-  Submitted = "SUBMITTED",
-  Graded = "GRADED",
-  Late = "LATE"
-}
+Pending,
+Graded,
+Late,
+}
+// const enum -- inlined at compile time, zero runtime overhead
+export const enum Role {
+Student = "student",
+Admin = "admin",
+Instructor = "instructor",
+}
+

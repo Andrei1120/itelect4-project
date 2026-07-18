@@ -9,25 +9,29 @@ The project serves as a foundational platform for learning advanced TypeScript c
 This project defines several core TypeScript interfaces, types, and generic functions:
 
 ### Interfaces & Basic Types
-*   `User`: Represents a system user with roles (`student`, `instructor`, `admin`) and status.
-*   `Course`: Represents academic course details (code, title, units, semester).
-*   `Submission`: Represents a repository submission by a student, with optional grading capability.
+*   `User`: Represents academic user data with standard attributes.
+*   `Course`: Represents details of an academic course.
+*   `Submission`: Represents a repository submission by a student.
 *   `ID`: A union type representing a unique identifier (string or number).
 *   `Coordinate`: An object type defining x and y coordinates.
 *   `Formatter`: A function signature type for formatting scores.
 *   `StringOrNumber`: A union type representing either a string or a number.
-*   `Status`: A union type representing account status states (`pending`, `active`, `inactive`).
+*   `Status`: A union type representing status states (`pending`, `active`, `inactive`).
 *   `StudentWithCourse`: An intersection type combining `User` and course enrollment data.
 
 ### Part 2 Additions
-*   `ApiResponse<T>`: A generic interface that models standardized API responses wrapping arbitrary payload data (`T`).
-*   `getFirst<T>`: A generic function that retrieves the first element from an array of any type.
-*   `getById<T>`: A generic function that retrieves an item by its unique ID from a list of objects containing `id`.
+*   `ApiResponse<T>`: A generic interface that wraps any API response data structure.
+*   `getFirst<T>`: A generic function that retrieves the first element from any array.
+*   `getById<T extends { id: number }>`: A generic function constrained to items containing a numeric `id`.
 *   **Utility Type Uses**:
-    *   `UserUpdateInput` (using `Partial<User>`): Allows updating subset fields of a User.
-    *   `CoursePreview` (using `Pick<Course, "code" | "title">`): Defines a course preview layout containing only code and title.
-    *   `OptionalSubmission` (using `Partial<Submission>`): Used for checking partial submissions.
-*   `SubmissionStatus` (Enum): A set of standard submission states (`PENDING`, `SUBMITTED`, `GRADED`, `LATE`).
+    *   `UserUpdate` (using `Partial<User>`): Makes all fields of `User` optional.
+    *   `UserPreview` (using `Pick<User, "id" | "name" | "role">`): Includes only the specific ID, name, and role fields.
+    *   `PublicUser` (using `Omit<User, "email" | "isActive">`): Excludes email and activity status fields.
+    *   `RoleCount` (using `Record<"student" | "admin" | "instructor", number>`): Maps user roles to numeric counts.
+    *   `NewSubmission` (using `ReturnType<typeof makeSubmission>`): Resolves to the return shape of the `makeSubmission` function.
+*   **Enums**:
+    *   `SubmissionStatus` (Regular Enum): Models submission states (`Pending`, `Graded`, `Late`) supporting reverse-mapping.
+    *   `Role` (Const Enum): Inlined at compile time for performance to represent user roles (`student`, `admin`, `instructor`).
 
 ## Getting Started
 
