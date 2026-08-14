@@ -1,7 +1,10 @@
-export const enum Role {
-  Student = "student",
-  SecurityAdmin = "security_admin"
-}
+// ===== ROLE =====
+export const Role = {
+  Student: "student",
+  SecurityAdmin: "security_admin",
+} as const;
+
+export type Role = (typeof Role)[keyof typeof Role];
 
 export interface User {
   id: number;
@@ -71,11 +74,13 @@ export type PublicClaim = Omit<Claim, "verifiedBy">;
 // Record<K, T> -- a fixed set of keys, each mapped to the same value type
 export type RoleCount = Record<"student" | "security_admin", number>;
 
-// ===== ENUMS =====
-// Regular enum -- exists at runtime; can be looped over or reverse-mapped
-export enum ClaimStatus {
-  Pending,
-  Approved,
-  Rejected,
-  Resolved
-}
+// ===== CLAIM STATUS =====
+// Regular enum replaced with const object (erasableSyntaxOnly compliance)
+export const ClaimStatus = {
+  Pending: 0,
+  Approved: 1,
+  Rejected: 2,
+  Resolved: 3,
+} as const;
+
+export type ClaimStatus = (typeof ClaimStatus)[keyof typeof ClaimStatus];
