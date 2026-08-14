@@ -14,11 +14,16 @@ const UserCard: React.FC<UserCardProps> = ({ user, onSelect }) => {
   };
 
   return (
-    <div className="user-card" style={{ border: '1px solid #ccc', padding: '16px', margin: '8px' }}>
-      <h3>{user.name}</h3>
-      <p>{user.email}</p>
-      <p>Role: {user.role}</p>
-      <button onClick={handleClick}>Select User</button>
+    <div className="user-card border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-4 m-2 shadow-sm transition-colors">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{user.name}</h3>
+      <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
+      <p className="text-gray-600 dark:text-gray-400">Role: <span className="font-medium">{user.role}</span></p>
+      <button 
+        onClick={handleClick}
+        className="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm transition-colors"
+      >
+        Select User
+      </button>
     </div>
   );
 };
