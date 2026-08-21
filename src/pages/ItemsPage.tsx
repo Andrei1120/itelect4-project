@@ -1,16 +1,34 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
+import type { ApiLostFoundItem } from "../types/index";
 import ItemCard from "../components/ItemCard";
-import { allItems } from "../data/mockData";
+import usePrevious from "../hooks/usePrevious";
+import useUiStore from "../store/uiStore";
+import { fetchItems } from "../api/client";
 
 function ItemsPage() {
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const { data, isPending, isError, error } = useQuery<ApiLostFoundItem[]>({
+    queryKey: ["items"],
+    queryFn: fetchItems,
+  });
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearchTerm(e.target.value);
-  };
+  const searchTerm = useUiStore((state) => state.searchTerm);
+  const setSearchTerm = useUiStore((state) => state.setSearchTerm);
+  const previousSearch = usePrevious(searchTerm);
 
-  const filteredItems = allItems.filter((item) =>
+  if (isPending) {
+    return <div className="animate-pulse p-6 text-gray-700 dark:text-gray-300">Loading items...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="rounded-lg bg-red-50 dark:bg-red-900/30 p-4 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800">
+        {error.message} -- is json-server running on port 3001?
+      </div>
+    );
+  }
+
+  const filteredItems = data.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -23,21 +41,33 @@ function ItemsPage() {
 
       <input
         value={searchTerm}
-        onChange={handleSearchChange}
+        onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Search items by title or location..."
-        className="w-full mb-6 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+        className="w-full mb-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-2.5 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {previousSearch !== undefined && previousSearch !== searchTerm && previousSearch !== "" && (
+        <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+          Previous search: "{previousSearch}"
+        </p>
+      )}
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-4">
         {filteredItems.map((item) => (
-          <Link key={item.id} to={`/items/${item.id}`} className="block transition-transform hover:scale-[1.02]">
+          <Link
+            key={item.id}
+            to={`/items/${item.id}`}
+            className="block transition-transform hover:scale-[1.02]"
+          >
             <ItemCard item={item} />
           </Link>
         ))}
       </div>
-      
+
       {filteredItems.length === 0 && (
-        <p className="text-gray-500 dark:text-gray-400 mt-4 text-center">No items found matching your search.</p>
+        <p className="text-gray-500 dark:text-gray-400 mt-6 text-center">
+          No items found matching your search.
+        </p>
       )}
     </div>
   );

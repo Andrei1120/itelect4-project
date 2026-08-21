@@ -84,3 +84,20 @@ export const ClaimStatus = {
 } as const;
 
 export type ClaimStatus = (typeof ClaimStatus)[keyof typeof ClaimStatus];
+
+// ===== SESSION 7: API TYPES DERIVED WITH OMIT & INTERSECTION =====
+// JSON has no Date, and json-server writes ids as strings.
+export type ApiLostFoundItem = Omit<LostFoundItem, "id" | "reportedAt"> & {
+  id: string;
+  reportedAt: string; // ISO string over the wire
+};
+
+export type NewLostFoundItem = Omit<ApiLostFoundItem, "id">;
+
+export type ApiClaim = Omit<Claim, "id" | "claimedAt" | "verifiedAt"> & {
+  id: string;
+  claimedAt: string; // ISO string over the wire
+  verifiedAt?: string;
+};
+
+export type NewClaim = Omit<ApiClaim, "id">;

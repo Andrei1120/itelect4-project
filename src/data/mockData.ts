@@ -1,16 +1,11 @@
-import { Role, ClaimStatus } from '../types/index';
-import type { User, LostFoundItem, Claim } from '../types/index';
+import { Role } from "../types/index";
+import type { User } from "../types/index";
 
+// allItems and allClaims are DELETED. They live in db.json now,
+// and the app fetches them via TanStack Query instead of importing them.
+//
+// Users stay here for now until authentication and user endpoints are built in Module 4.
 export const allUsers: User[] = [
   { id: 1, name: "Juan dela Cruz", email: "juan@example.com", role: Role.Student, isActive: true },
-  { id: 2, name: "Maria Clara", email: "maria@example.com", role: Role.Student, isActive: true }
-];
-
-export const allItems: LostFoundItem[] = [
-  { id: 1, title: "Lost Wallet", description: "Black leather wallet", type: "lost", location: "Cafeteria", reportedAt: new Date(), reportedBy: 1 },
-  { id: 2, title: "Found Keys", description: "Set of keys with red lanyard", type: "found", location: "Library", reportedAt: new Date(), reportedBy: 2 }
-];
-
-export const allClaims: Claim[] = [
-  { id: 1, itemId: 1, claimerId: 2, status: ClaimStatus.Pending, claimedAt: new Date() }
+  { id: 2, name: "Maria Clara", email: "maria@example.com", role: Role.Student, isActive: true },
 ];
