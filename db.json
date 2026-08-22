@@ -2,73 +2,78 @@
   "items": [
     {
       "id": "1",
-      "title": "AirPods Pro",
-      "description": "White AirPods Pro in charging case",
+      "title": "AirPods",
+      "description": "Blue unknown brand in case",
+      "category": "Electronics",
       "type": "found",
-      "location": "Gym Locker Room",
-      "reportedAt": "2026-08-10T09:00:00.000Z",
+      "status": "found",
+      "location": "Sentru",
+      "reportedAt": "2026-08-20T09:00:00.000Z",
       "reportedBy": 1
     },
     {
       "id": "2",
       "title": "Red Umbrella",
       "description": "Classic red umbrella with wooden handle",
+      "category": "Bags & Luggage",
       "type": "lost",
+      "status": "lost",
       "location": "Main Entrance Lobby",
-      "reportedAt": "2026-08-11T14:30:00.000Z",
+      "reportedAt": "2026-08-19T14:30:00.000Z",
       "reportedBy": 2
     },
     {
       "id": "3",
       "title": "Gold Watch",
-      "description": "Submariner style with gold bracelet band",
+      "description": "Rolex Submariner with gold band",
+      "category": "Accessories",
       "type": "found",
+      "status": "found",
       "location": "Dormitory Front Desk",
-      "reportedAt": "2026-08-12T11:15:00.000Z",
+      "reportedAt": "2026-08-17T11:15:00.000Z",
       "reportedBy": 1
     },
     {
       "id": "4",
-      "title": "Lost Hydro Flask",
-      "description": "White 32oz flask with DLSL sticker",
-      "type": "lost",
-      "location": "Gymnasium",
-      "reportedAt": "2026-08-13T16:00:00.000Z",
-      "reportedBy": 1
-    },
-    {
-      "id": "5",
-      "title": "Found Keys",
-      "description": "Set of keys with red lanyard",
+      "title": "AirPods Pro",
+      "description": "White AirPods Pro in charging case",
+      "category": "Electronics",
       "type": "found",
-      "location": "College Library",
-      "reportedAt": "2026-08-14T08:45:00.000Z",
+      "status": "claimed",
+      "location": "Gym Locker Room",
+      "reportedAt": "2026-08-15T16:00:00.000Z",
       "reportedBy": 2
     },
     {
-      "id": "6",
-      "title": "Leather Backpack",
-      "description": "Brown vintage leather backpack containing notebooks",
+      "id": "5",
+      "title": "Diamond Ring",
+      "description": "Silver band with small diamond stone",
+      "category": "Jewelry",
       "type": "found",
-      "location": "Cafeteria Hall B",
-      "reportedAt": "2026-08-15T13:20:00.000Z",
+      "status": "found",
+      "location": "Science Lab 3",
+      "reportedAt": "2026-08-18T08:45:00.000Z",
+      "reportedBy": 1
+    },
+    {
+      "id": "6",
+      "title": "Black Leather Backpack",
+      "description": "Nike backpack with textbooks inside",
+      "category": "Bags & Luggage",
+      "type": "found",
+      "status": "found",
+      "location": "Cafeteria Table 4",
+      "reportedAt": "2026-08-21T13:20:00.000Z",
       "reportedBy": 1
     }
   ],
   "claims": [
     {
       "id": "1",
-      "itemId": 1,
+      "itemId": 4,
       "claimerId": 2,
       "status": 1,
-      "claimedAt": "2026-08-12T10:00:00.000Z"
-    },
-    {
-      "id": "2",
-      "itemId": 3,
-      "claimerId": 1,
-      "status": 0,
-      "claimedAt": "2026-08-14T15:20:00.000Z"
+      "claimedAt": "2026-08-16T10:00:00.000Z"
     }
   ]
 }

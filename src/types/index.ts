@@ -19,6 +19,8 @@ export interface LostFoundItem {
   title: string;
   description: string;
   type: "lost" | "found";
+  category?: string;
+  status?: "lost" | "found" | "claimed";
   location: string;
   reportedAt: Date;
   reportedBy: number; // User ID
