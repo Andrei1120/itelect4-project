@@ -90,22 +90,70 @@ function DashboardPage() {
   const totalReports = items.length + claims.length;
 
   const categories = [
-    { name: "Electronics", icon: "💻", count: items.filter(i => (i.category || "").toLowerCase() === "electronics" || i.title.toLowerCase().includes("airpod") || i.title.toLowerCase().includes("phone")).length || 12 },
-    { name: "Bags & Luggage", icon: "🎒", count: items.filter(i => (i.category || "").toLowerCase().includes("bag") || i.title.toLowerCase().includes("backpack") || i.title.toLowerCase().includes("umbrella")).length || 18 },
-    { name: "Accessories", icon: "⌚", count: items.filter(i => (i.category || "").toLowerCase() === "accessories" || i.title.toLowerCase().includes("watch") || i.title.toLowerCase().includes("key")).length || 15 },
-    { name: "Jewelry", icon: "💍", count: items.filter(i => (i.category || "").toLowerCase() === "jewelry" || i.title.toLowerCase().includes("ring") || i.title.toLowerCase().includes("gold")).length || 8 },
-    { name: "Other", icon: "📦", count: items.filter(i => (i.category || "").toLowerCase() === "other" || i.title.toLowerCase().includes("flask") || i.title.toLowerCase().includes("wallet")).length || 11 },
+    {
+      name: "Electronics",
+      icon: "💻",
+      count: items.filter(
+        (i) =>
+          (i.category || "").toLowerCase() === "electronics" ||
+          i.title.toLowerCase().includes("airpod") ||
+          i.title.toLowerCase().includes("phone")
+      ).length || 12,
+    },
+    {
+      name: "Bags & Luggage",
+      icon: "🎒",
+      count: items.filter(
+        (i) =>
+          (i.category || "").toLowerCase().includes("bag") ||
+          i.title.toLowerCase().includes("backpack") ||
+          i.title.toLowerCase().includes("umbrella")
+      ).length || 18,
+    },
+    {
+      name: "ID / Cards",
+      icon: "🪪",
+      count: items.filter(
+        (i) =>
+          (i.category || "").toLowerCase().includes("id") ||
+          (i.category || "").toLowerCase().includes("card") ||
+          i.title.toLowerCase().includes("id") ||
+          i.title.toLowerCase().includes("card") ||
+          i.title.toLowerCase().includes("wallet")
+      ).length || 15,
+    },
+    {
+      name: "Essentials",
+      icon: "🧴",
+      count: items.filter(
+        (i) =>
+          (i.category || "").toLowerCase() === "essentials" ||
+          i.title.toLowerCase().includes("flask") ||
+          i.title.toLowerCase().includes("bottle") ||
+          i.title.toLowerCase().includes("key")
+      ).length || 8,
+    },
+    {
+      name: "Other",
+      icon: "📦",
+      count: items.filter(
+        (i) =>
+          (i.category || "").toLowerCase() === "other" ||
+          (!i.category && !i.title.toLowerCase().includes("airpod"))
+      ).length || 11,
+    },
   ];
 
-  // Helper for category emojis
+  // Helper for item emojis
   const getItemEmoji = (item: ApiLostFoundItem) => {
     const title = item.title.toLowerCase();
+    const cat = (item.category || "").toLowerCase();
     if (title.includes("airpod") || title.includes("earbud")) return "🎧";
     if (title.includes("umbrella")) return "🌂";
-    if (title.includes("watch")) return "⌚";
-    if (title.includes("ring")) return "💍";
+    if (title.includes("id") || title.includes("card") || cat.includes("id")) return "🪪";
+    if (title.includes("flask") || title.includes("bottle") || cat.includes("essential")) return "🍶";
     if (title.includes("backpack") || title.includes("bag")) return "🎒";
-    if (title.includes("flask") || title.includes("bottle")) return "🍶";
+    if (title.includes("watch")) return "⌚";
     if (title.includes("key")) return "🔑";
     if (title.includes("wallet")) return "👛";
     return "📦";
@@ -121,7 +169,7 @@ function DashboardPage() {
             setSearchTerm("lost");
             navigate("/items");
           }}
-          className="cursor-pointer group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
+          className="cursor-pointer group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-5 flex items-center gap-4 shadow-xs hover:shadow-md transition-all hover:-translate-y-0.5"
         >
           <div className="w-13 h-13 rounded-2xl bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-2xl text-indigo-600 dark:text-indigo-400">
             👜
@@ -145,7 +193,7 @@ function DashboardPage() {
             setSearchTerm("found");
             navigate("/items");
           }}
-          className="cursor-pointer group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
+          className="cursor-pointer group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-5 flex items-center gap-4 shadow-xs hover:shadow-md transition-all hover:-translate-y-0.5"
         >
           <div className="w-13 h-13 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-2xl text-emerald-600 dark:text-emerald-400">
             ✅
@@ -166,7 +214,7 @@ function DashboardPage() {
         {/* Claimed Items */}
         <div
           onClick={() => navigate("/claims")}
-          className="cursor-pointer group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
+          className="cursor-pointer group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-5 flex items-center gap-4 shadow-xs hover:shadow-md transition-all hover:-translate-y-0.5"
         >
           <div className="w-13 h-13 rounded-2xl bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-2xl text-blue-600 dark:text-blue-400">
             🔖
@@ -187,7 +235,7 @@ function DashboardPage() {
         {/* Total Reports */}
         <div
           onClick={() => navigate("/items")}
-          className="cursor-pointer group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
+          className="cursor-pointer group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-5 flex items-center gap-4 shadow-xs hover:shadow-md transition-all hover:-translate-y-0.5"
         >
           <div className="w-13 h-13 rounded-2xl bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center text-2xl text-amber-600 dark:text-amber-400">
             📋
@@ -207,7 +255,7 @@ function DashboardPage() {
       </div>
 
       {/* 2. Hero Banner: Keep Our Campus Together */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-50/80 via-indigo-50/60 to-purple-50/70 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900 border border-indigo-100/80 dark:border-slate-800 p-8 shadow-sm">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-50/90 via-indigo-50/70 to-purple-50/80 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900 border border-indigo-100/80 dark:border-slate-800 p-8 shadow-xs">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
           <div className="max-w-xl">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -281,7 +329,7 @@ function DashboardPage() {
       </div>
 
       {/* 4. Recently Reported Items Table */}
-      <div className="rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-6 shadow-sm">
+      <div className="rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-6 shadow-xs">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-base font-bold text-slate-900 dark:text-white">
             Recently Reported Items
@@ -446,7 +494,7 @@ function DashboardPage() {
                   required
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
-                  placeholder="e.g. AirPods Pro with white case"
+                  placeholder="e.g. DLSL ID Card, AquaFlask, AirPods Pro"
                   className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/70 p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               </div>
@@ -463,8 +511,8 @@ function DashboardPage() {
                 >
                   <option value="Electronics">Electronics</option>
                   <option value="Bags & Luggage">Bags & Luggage</option>
-                  <option value="Accessories">Accessories</option>
-                  <option value="Jewelry">Jewelry</option>
+                  <option value="ID / Cards">ID / Cards</option>
+                  <option value="Essentials">Essentials</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
@@ -479,7 +527,7 @@ function DashboardPage() {
                   required
                   value={formLocation}
                   onChange={(e) => setFormLocation(e.target.value)}
-                  placeholder="e.g. Sentru, Main Entrance Lobby, Library 2F"
+                  placeholder="e.g. Sentru, Main Entrance Lobby, Science Lab"
                   className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/70 p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               </div>
@@ -493,7 +541,7 @@ function DashboardPage() {
                   rows={2}
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
-                  placeholder="Provide color, brand, markings, or other identifying features..."
+                  placeholder="Provide color, markings, owner name, or distinguishing features..."
                   className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/70 p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               </div>
