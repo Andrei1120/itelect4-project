@@ -2,39 +2,78 @@
   "items": [
     {
       "id": "1",
-      "title": "Lost Wallet",
-      "description": "Black leather wallet with student ID inside",
-      "type": "lost",
-      "location": "Cafeteria",
-      "reportedAt": "2026-08-01T09:00:00.000Z",
+      "title": "AirPods",
+      "description": "Blue unknown brand in case",
+      "category": "Electronics",
+      "type": "found",
+      "status": "found",
+      "location": "Sentru",
+      "reportedAt": "2026-08-20T09:00:00.000Z",
       "reportedBy": 1
     },
     {
       "id": "2",
-      "title": "Found Keys",
-      "description": "Set of keys with red lanyard",
-      "type": "found",
-      "location": "Library",
-      "reportedAt": "2026-08-02T14:30:00.000Z",
+      "title": "Red Umbrella",
+      "description": "Classic red umbrella with wooden handle",
+      "category": "Bags & Luggage",
+      "type": "lost",
+      "status": "lost",
+      "location": "Main Entrance Lobby",
+      "reportedAt": "2026-08-19T14:30:00.000Z",
       "reportedBy": 2
     },
     {
       "id": "3",
-      "title": "Lost Hydro Flask",
-      "description": "White 32oz flask with DLSL sticker",
-      "type": "lost",
-      "location": "Gymnasium",
-      "reportedAt": "2026-08-03T11:15:00.000Z",
+      "title": "Student ID Card",
+      "description": "DLSL ID with green lanyard - Juan Dela Cruz",
+      "category": "ID / Cards",
+      "type": "found",
+      "status": "found",
+      "location": "Dormitory Front Desk",
+      "reportedAt": "2026-08-17T11:15:00.000Z",
+      "reportedBy": 1
+    },
+    {
+      "id": "4",
+      "title": "AirPods Pro",
+      "description": "White AirPods Pro in charging case",
+      "category": "Electronics",
+      "type": "found",
+      "status": "claimed",
+      "location": "Gym Locker Room",
+      "reportedAt": "2026-08-15T16:00:00.000Z",
+      "reportedBy": 2
+    },
+    {
+      "id": "5",
+      "title": "AquaFlask 32oz",
+      "description": "Mint green stainless flask with stickers",
+      "category": "Essentials",
+      "type": "found",
+      "status": "found",
+      "location": "Science Lab 3",
+      "reportedAt": "2026-08-18T08:45:00.000Z",
+      "reportedBy": 1
+    },
+    {
+      "id": "6",
+      "title": "Black Leather Backpack",
+      "description": "Nike backpack with textbooks inside",
+      "category": "Bags & Luggage",
+      "type": "found",
+      "status": "found",
+      "location": "Cafeteria Table 4",
+      "reportedAt": "2026-08-21T13:20:00.000Z",
       "reportedBy": 1
     }
   ],
   "claims": [
     {
       "id": "1",
-      "itemId": 1,
+      "itemId": 4,
       "claimerId": 2,
-      "status": 0,
-      "claimedAt": "2026-08-05T10:00:00.000Z"
+      "status": 1,
+      "claimedAt": "2026-08-16T10:00:00.000Z"
     }
   ]
 }
