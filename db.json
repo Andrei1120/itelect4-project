@@ -2,29 +2,56 @@
   "items": [
     {
       "id": "1",
-      "title": "Lost Wallet",
-      "description": "Black leather wallet with student ID inside",
-      "type": "lost",
-      "location": "Cafeteria",
-      "reportedAt": "2026-08-01T09:00:00.000Z",
+      "title": "AirPods Pro",
+      "description": "White AirPods Pro in charging case",
+      "type": "found",
+      "location": "Gym Locker Room",
+      "reportedAt": "2026-08-10T09:00:00.000Z",
       "reportedBy": 1
     },
     {
       "id": "2",
-      "title": "Found Keys",
-      "description": "Set of keys with red lanyard",
-      "type": "found",
-      "location": "Library",
-      "reportedAt": "2026-08-02T14:30:00.000Z",
+      "title": "Red Umbrella",
+      "description": "Classic red umbrella with wooden handle",
+      "type": "lost",
+      "location": "Main Entrance Lobby",
+      "reportedAt": "2026-08-11T14:30:00.000Z",
       "reportedBy": 2
     },
     {
       "id": "3",
+      "title": "Gold Watch",
+      "description": "Submariner style with gold bracelet band",
+      "type": "found",
+      "location": "Dormitory Front Desk",
+      "reportedAt": "2026-08-12T11:15:00.000Z",
+      "reportedBy": 1
+    },
+    {
+      "id": "4",
       "title": "Lost Hydro Flask",
       "description": "White 32oz flask with DLSL sticker",
       "type": "lost",
       "location": "Gymnasium",
-      "reportedAt": "2026-08-03T11:15:00.000Z",
+      "reportedAt": "2026-08-13T16:00:00.000Z",
+      "reportedBy": 1
+    },
+    {
+      "id": "5",
+      "title": "Found Keys",
+      "description": "Set of keys with red lanyard",
+      "type": "found",
+      "location": "College Library",
+      "reportedAt": "2026-08-14T08:45:00.000Z",
+      "reportedBy": 2
+    },
+    {
+      "id": "6",
+      "title": "Leather Backpack",
+      "description": "Brown vintage leather backpack containing notebooks",
+      "type": "found",
+      "location": "Cafeteria Hall B",
+      "reportedAt": "2026-08-15T13:20:00.000Z",
       "reportedBy": 1
     }
   ],
@@ -33,8 +60,15 @@
       "id": "1",
       "itemId": 1,
       "claimerId": 2,
+      "status": 1,
+      "claimedAt": "2026-08-12T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "itemId": 3,
+      "claimerId": 1,
       "status": 0,
-      "claimedAt": "2026-08-05T10:00:00.000Z"
+      "claimedAt": "2026-08-14T15:20:00.000Z"
     }
   ]
 }
