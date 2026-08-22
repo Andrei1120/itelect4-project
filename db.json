@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "id": "1",
+      "title": "Lost Wallet",
+      "description": "Black leather wallet with student ID inside",
+      "type": "lost",
+      "location": "Cafeteria",
+      "reportedAt": "2026-08-01T09:00:00.000Z",
+      "reportedBy": 1
+    },
+    {
+      "id": "2",
+      "title": "Found Keys",
+      "description": "Set of keys with red lanyard",
+      "type": "found",
+      "location": "Library",
+      "reportedAt": "2026-08-02T14:30:00.000Z",
+      "reportedBy": 2
+    },
+    {
+      "id": "3",
+      "title": "Lost Hydro Flask",
+      "description": "White 32oz flask with DLSL sticker",
+      "type": "lost",
+      "location": "Gymnasium",
+      "reportedAt": "2026-08-03T11:15:00.000Z",
+      "reportedBy": 1
+    }
+  ],
+  "claims": [
+    {
+      "id": "1",
+      "itemId": 1,
+      "claimerId": 2,
+      "status": 0,
+      "claimedAt": "2026-08-05T10:00:00.000Z"
+    }
+  ]
+}

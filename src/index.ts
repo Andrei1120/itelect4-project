@@ -2,9 +2,6 @@
 // Variables with explicit types
 const projectName: string = "itelect4-project";
 const currentYear: number = 2026;
-const isFullStack: boolean = true;
-const nothing: null = null;
-const notSet: undefined = undefined;
 
 // Function: typed parameters + typed return value
 function greet(name: string, year: number): string {
@@ -16,10 +13,6 @@ function logMessage(message: string): void {
   console.log(message);
 }
 logMessage(greet(projectName, currentYear));
-
-let anything: any = "hello";
-anything = 42; // No error
-anything = true; // No error
 
 // unknown -- the safer version of any
 // You MUST check the type before using it
@@ -33,9 +26,11 @@ if (typeof userInput === "string") {
 function throwError(message: string): never {
   throw new Error(message);
 }
+// Suppress "declared but never read" for demo-only throwError
+void throwError;
 
-import { Role } from "../types/index";
-import type { User, LostFoundItem, Claim } from "../types/index";
+import { Role } from "./types/index";
+import type { User, LostFoundItem } from "./types/index";
 
 // ===== USING INTERFACES =====
 const student: User = {
@@ -59,7 +54,7 @@ const item: LostFoundItem = {
 console.log("User entity:", student);
 console.log("Lost/Found Item entity:", item);
 
-import type { StringOrNumber } from "../types/index";
+import type { StringOrNumber } from "./types/index";
 // Narrowing with typeof
 // Without the if-check, TypeScript would error:
 // Property 'toUpperCase' does not exist on type 'number'
@@ -104,7 +99,7 @@ console.log("firstUser name:", firstUser?.name); // Juan dela Cruz
 console.log("foundUser email:", foundUser?.email); // juan@example.com
 
 // ===== GENERIC INTERFACE =====
-import type { ApiResponse } from "../types/index";
+import type { ApiResponse } from "./types/index";
 const userResponse: ApiResponse<User> = {
   success: true,
   data: student,
@@ -114,9 +109,10 @@ const itemResponse: ApiResponse<LostFoundItem[]> = {
   data: [item],
 };
 console.log("ApiResponse user name:", userResponse.data.name); // Juan dela Cruz
+console.log("ApiResponse item count:", itemResponse.data.length);
 
 // ===== USING UTILITY TYPES =====
-import { UserUpdate, ItemPreview, PublicClaim, RoleCount } from "../types/index";
+import type { UserUpdate, ItemPreview, PublicClaim, RoleCount } from "./types/index";
 // Partial<T> -- update payload only needs the changed fields
 const patch: UserUpdate = { name: "Juan D. Cruz" };
 // Pick<T,K> -- a lightweight preview object
@@ -126,6 +122,8 @@ const publicProfile: PublicClaim = { id: 1, itemId: 101, claimerId: 1, status: 0
 // Record<K,T> -- dashboard-style counts
 const roleCount: RoleCount = { student: 45, security_admin: 2 };
 
+console.log(patch, preview, publicProfile, roleCount);
+
 // ===== ReturnType<T> =====
 function makeClaim(itemId: number, claimerId: number) {
   return { id: 1, itemId, claimerId, status: 0, claimedAt: new Date() };
@@ -133,11 +131,12 @@ function makeClaim(itemId: number, claimerId: number) {
 // Infer the shape directly from the function -- no need to redeclare it
 type NewClaim = ReturnType<typeof makeClaim>;
 const gt1Claim: NewClaim = makeClaim(101, 1);
+console.log("gt1Claim:", gt1Claim);
 
-// ===== USING ENUMS =====
-import { ClaimStatus } from "../types/index";
+// ===== USING CLAIM STATUS & ROLE =====
+import { ClaimStatus } from "./types/index";
 let status: ClaimStatus = ClaimStatus.Pending;
-console.log("ClaimStatus reverse mapping:", ClaimStatus[status]); // "Pending" -- reverse mapping
+console.log("ClaimStatus value:", status); // 0
 status = ClaimStatus.Approved;
 console.log("Is status Approved?:", status === ClaimStatus.Approved); // true
 const currentRole: Role = Role.Student;
