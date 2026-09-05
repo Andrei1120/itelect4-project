@@ -1,13 +1,39 @@
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { ApiClaim } from "../types/index";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { ApiClaim, ApiLostFoundItem } from "../types/index";
 import { ClaimStatus } from "../types/index";
+import { claimSchema, type ClaimFormValues } from "../schemas/claimSchema";
 import ClaimBadge from "../components/ClaimBadge";
-import { fetchClaims, createClaim } from "../api/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { fetchClaims, createClaim, fetchItems } from "../api/client";
 
 function ClaimsPage() {
-  const [itemId, setItemId] = useState<string>("");
   const queryClient = useQueryClient();
+
+  // useForm holds the values, runs the schema, and stores the errors.
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ClaimFormValues>({
+    resolver: zodResolver(claimSchema),
+    mode: "onBlur",
+    defaultValues: {
+      itemId: "",
+      contactEmail: "",
+      claimReason: "",
+    },
+  });
+
+  // Query items for the dropdown
+  const items = useQuery<ApiLostFoundItem[]>({
+    queryKey: ["items"],
+    queryFn: fetchItems,
+  });
 
   // 1. READ: Fetch claims list with useQuery
   const { data, isPending, isError, error } = useQuery<ApiClaim[]>({
@@ -20,16 +46,14 @@ function ClaimsPage() {
     mutationFn: createClaim,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["claims"] });
-      setItemId("");
+      reset(); // Clears all fields at once
     },
   });
 
-  const handleAdd = (): void => {
-    const parsedItemId = parseInt(itemId, 10);
-    if (isNaN(parsedItemId)) return;
-
+  // handleSubmit only calls this after the schema passes
+  const onSubmit = (values: ClaimFormValues): void => {
     addClaim.mutate({
-      itemId: parsedItemId,
+      itemId: parseInt(values.itemId, 10),
       claimerId: 1, // Current demo student user
       status: ClaimStatus.Pending,
       claimedAt: new Date().toISOString(),
@@ -37,7 +61,11 @@ function ClaimsPage() {
   };
 
   if (isPending) {
-    return <div className="animate-pulse p-6 text-gray-700 dark:text-gray-300">Loading claims...</div>;
+    return (
+      <div className="animate-pulse p-6 text-gray-700 dark:text-gray-300">
+        Loading claims...
+      </div>
+    );
   }
 
   if (isError) {
@@ -54,27 +82,80 @@ function ClaimsPage() {
         My Claims
       </h2>
 
-      <div className="mb-6 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm">
-        <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2">
+      {/* Form wired with React Hook Form, Zod resolver, and Shadcn UI */}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mb-6 grid gap-4 rounded-xl border border-border bg-white dark:bg-[#0f172a] p-5 shadow-xs"
+      >
+        <h3 className="text-base font-semibold text-foreground">
           File a New Claim
         </h3>
-        <div className="flex gap-2">
-          <input
-            type="number"
-            value={itemId}
-            onChange={(e) => setItemId(e.target.value)}
-            placeholder="Enter Item ID to claim (e.g., 1, 2, 3)..."
-            className="w-full rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 p-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={handleAdd}
-            disabled={itemId.trim() === "" || addClaim.isPending}
-            className="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed whitespace-nowrap"
+
+        {/* Course / Item select field */}
+        <div className="grid gap-1.5">
+          <Label htmlFor="itemId" className="text-foreground">
+            Select Item to Claim
+          </Label>
+          <select
+            id="itemId"
+            {...register("itemId")}
+            aria-invalid={errors.itemId ? true : undefined}
+            className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
-            {addClaim.isPending ? "Submitting..." : "Submit Claim"}
-          </button>
+            <option value="">Choose an item...</option>
+            {items.data?.map((item) => (
+              <option key={item.id} value={item.id}>
+                #{item.id} - {item.title} ({item.location})
+              </option>
+            ))}
+          </select>
+          {errors.itemId && (
+            <p className="text-sm text-red-600">{errors.itemId.message}</p>
+          )}
         </div>
-      </div>
+
+        {/* Contact Email field */}
+        <div className="grid gap-1.5">
+          <Label htmlFor="contactEmail" className="text-foreground">
+            Contact Email
+          </Label>
+          <Input
+            id="contactEmail"
+            type="email"
+            {...register("contactEmail")}
+            aria-invalid={errors.contactEmail ? true : undefined}
+            placeholder="juan@dlsl.edu.ph"
+          />
+          {errors.contactEmail && (
+            <p className="text-sm text-red-600">{errors.contactEmail.message}</p>
+          )}
+        </div>
+
+        {/* Proof / Reason field */}
+        <div className="grid gap-1.5">
+          <Label htmlFor="claimReason" className="text-foreground">
+            Proof of Ownership / Distinct Details
+          </Label>
+          <Input
+            id="claimReason"
+            {...register("claimReason")}
+            aria-invalid={errors.claimReason ? true : undefined}
+            placeholder="Describe unique marks, serial number, or stickers..."
+          />
+          {errors.claimReason && (
+            <p className="text-sm text-red-600">{errors.claimReason.message}</p>
+          )}
+        </div>
+
+        {/* Button: never disabled on invalid; only disabled while pending */}
+        <Button
+          type="submit"
+          disabled={addClaim.isPending}
+          className="justify-self-start"
+        >
+          {addClaim.isPending ? "Saving..." : "Submit Claim"}
+        </Button>
+      </form>
 
       {addClaim.isError && (
         <p className="mb-4 text-sm text-red-700 dark:text-red-400">

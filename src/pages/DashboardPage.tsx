@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { itemSchema, type ItemFormValues } from "../schemas/itemSchema";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { fetchItems, fetchClaims, createItem } from "../api/client";
 import useUiStore from "../store/uiStore";
 import type { ApiLostFoundItem, NewLostFoundItem } from "../types/index";
@@ -12,11 +18,6 @@ function DashboardPage() {
 
   // Modal State for Report Item
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [formTitle, setFormTitle] = useState("");
-  const [formDescription, setFormDescription] = useState("");
-  const [formCategory, setFormCategory] = useState("Electronics");
-  const [formType, setFormType] = useState<"lost" | "found">("lost");
-  const [formLocation, setFormLocation] = useState("");
 
   // 1. TanStack Query for Items
   const {
@@ -33,30 +34,46 @@ function DashboardPage() {
     queryFn: fetchClaims,
   });
 
+  // Form handling with React Hook Form & Zod
+  const {
+    register: registerItem,
+    handleSubmit: handleItemSubmit,
+    reset: resetItemForm,
+    setValue: setItemValue,
+    watch: watchItem,
+    formState: { errors: itemErrors },
+  } = useForm<ItemFormValues>({
+    resolver: zodResolver(itemSchema),
+    mode: "onBlur",
+    defaultValues: {
+      title: "",
+      category: "Electronics",
+      type: "lost",
+      location: "",
+      description: "",
+    },
+  });
+
+  const selectedType = watchItem("type");
+
   // 3. TanStack Mutation for Reporting an Item
   const reportItemMutation = useMutation({
     mutationFn: (newItem: NewLostFoundItem) => createItem(newItem),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
       setIsReportModalOpen(false);
-      setFormTitle("");
-      setFormDescription("");
-      setFormLocation("");
-      setFormCategory("Electronics");
+      resetItemForm();
     },
   });
 
-  const handleReportSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formTitle.trim() || !formLocation.trim()) return;
-
+  const onReportSubmit = (values: ItemFormValues) => {
     reportItemMutation.mutate({
-      title: formTitle.trim(),
-      description: formDescription.trim() || "No additional description provided.",
-      type: formType,
-      category: formCategory,
-      status: formType,
-      location: formLocation.trim(),
+      title: values.title.trim(),
+      description: values.description.trim() || "No additional description provided.",
+      type: values.type,
+      category: values.category,
+      status: values.type,
+      location: values.location.trim(),
       reportedAt: new Date().toISOString(),
       reportedBy: 1,
     });
@@ -452,18 +469,18 @@ function DashboardPage() {
               </button>
             </div>
 
-            <form onSubmit={handleReportSubmit} className="space-y-4">
+            <form onSubmit={handleItemSubmit(onReportSubmit)} className="space-y-4">
               {/* Type toggle: Lost vs Found */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                <Label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                   Report Type
-                </label>
+                </Label>
                 <div className="grid grid-cols-2 gap-2.5">
                   <button
                     type="button"
-                    onClick={() => setFormType("lost")}
-                    className={`py-2.5 px-4 text-xs font-bold rounded-2xl border transition-all flex items-center justify-center gap-2 ${
-                      formType === "lost"
+                    onClick={() => setItemValue("type", "lost")}
+                    className={`py-2.5 px-4 text-xs font-bold rounded-2xl border transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                      selectedType === "lost"
                         ? "bg-rose-50 border-rose-500 text-rose-600 dark:bg-rose-950/40 dark:text-rose-300 shadow-xs"
                         : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
                     }`}
@@ -472,9 +489,9 @@ function DashboardPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setFormType("found")}
-                    className={`py-2.5 px-4 text-xs font-bold rounded-2xl border transition-all flex items-center justify-center gap-2 ${
-                      formType === "found"
+                    onClick={() => setItemValue("type", "found")}
+                    className={`py-2.5 px-4 text-xs font-bold rounded-2xl border transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                      selectedType === "found"
                         ? "bg-emerald-50 border-emerald-500 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-300 shadow-xs"
                         : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
                     }`}
@@ -486,28 +503,31 @@ function DashboardPage() {
 
               {/* Title input */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                <Label htmlFor="itemTitle" className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                   Item Title
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formTitle}
-                  onChange={(e) => setFormTitle(e.target.value)}
+                </Label>
+                <Input
+                  id="itemTitle"
+                  {...registerItem("title")}
+                  aria-invalid={itemErrors.title ? true : undefined}
                   placeholder="e.g. DLSL ID Card, AquaFlask, AirPods Pro"
-                  className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/70 p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full rounded-2xl p-3 text-xs bg-slate-50/70 dark:bg-slate-800/70"
                 />
+                {itemErrors.title && (
+                  <p className="text-xs text-red-600 mt-1">{itemErrors.title.message}</p>
+                )}
               </div>
 
               {/* Category dropdown */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                <Label htmlFor="itemCategory" className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                   Category
-                </label>
+                </Label>
                 <select
-                  value={formCategory}
-                  onChange={(e) => setFormCategory(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/70 p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  id="itemCategory"
+                  {...registerItem("category")}
+                  aria-invalid={itemErrors.category ? true : undefined}
+                  className="w-full rounded-2xl border border-input bg-slate-50/70 dark:bg-slate-800/70 p-3 text-xs text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition"
                 >
                   <option value="Electronics">Electronics</option>
                   <option value="Bags & Luggage">Bags & Luggage</option>
@@ -515,53 +535,63 @@ function DashboardPage() {
                   <option value="Essentials">Essentials</option>
                   <option value="Other">Other</option>
                 </select>
+                {itemErrors.category && (
+                  <p className="text-xs text-red-600 mt-1">{itemErrors.category.message}</p>
+                )}
               </div>
 
               {/* Location input */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                <Label htmlFor="itemLocation" className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                   Location (Where Lost / Found)
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formLocation}
-                  onChange={(e) => setFormLocation(e.target.value)}
+                </Label>
+                <Input
+                  id="itemLocation"
+                  {...registerItem("location")}
+                  aria-invalid={itemErrors.location ? true : undefined}
                   placeholder="e.g. Sentru, Main Entrance Lobby, Science Lab"
-                  className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/70 p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full rounded-2xl p-3 text-xs bg-slate-50/70 dark:bg-slate-800/70"
                 />
+                {itemErrors.location && (
+                  <p className="text-xs text-red-600 mt-1">{itemErrors.location.message}</p>
+                )}
               </div>
 
               {/* Description input */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                <Label htmlFor="itemDesc" className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                   Description / Details
-                </label>
+                </Label>
                 <textarea
+                  id="itemDesc"
                   rows={2}
-                  value={formDescription}
-                  onChange={(e) => setFormDescription(e.target.value)}
+                  {...registerItem("description")}
+                  aria-invalid={itemErrors.description ? true : undefined}
                   placeholder="Provide color, markings, owner name, or distinguishing features..."
-                  className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/70 p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full rounded-2xl border border-input bg-slate-50/70 dark:bg-slate-800/70 p-3 text-xs text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition"
                 />
+                {itemErrors.description && (
+                  <p className="text-xs text-red-600 mt-1">{itemErrors.description.message}</p>
+                )}
               </div>
 
               {/* Submit Buttons */}
               <div className="flex justify-end gap-3 pt-2">
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={() => setIsReportModalOpen(false)}
-                  className="rounded-2xl px-5 py-2.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                  className="rounded-2xl px-5 py-2.5 text-xs font-semibold"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
                   disabled={reportItemMutation.isPending}
-                  className="rounded-2xl bg-blue-600 px-6 py-2.5 text-xs font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-500 disabled:bg-slate-400 transition"
+                  className="rounded-2xl px-6 py-2.5 text-xs font-bold shadow-md"
                 >
                   {reportItemMutation.isPending ? "Submitting..." : "Submit Report"}
-                </button>
+                </Button>
               </div>
             </form>
           </div>
