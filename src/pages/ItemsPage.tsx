@@ -5,6 +5,7 @@ import ItemCard from "../components/ItemCard";
 import usePrevious from "../hooks/usePrevious";
 import useUiStore from "../store/uiStore";
 import { fetchItems } from "../api/client";
+import { Input } from "@/components/ui/input";
 
 function ItemsPage() {
   const { data, isPending, isError, error } = useQuery<ApiLostFoundItem[]>({
@@ -28,7 +29,7 @@ function ItemsPage() {
     );
   }
 
-  const filteredItems = data.filter((item) =>
+  const filteredItems = (data ?? []).filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -39,11 +40,11 @@ function ItemsPage() {
         Lost & Found Items
       </h2>
 
-      <input
+      <Input
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Search items by title or location..."
-        className="w-full mb-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-2.5 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+        className="w-full mb-2 bg-white dark:bg-gray-800 border-border"
       />
 
       {previousSearch !== undefined && previousSearch !== searchTerm && previousSearch !== "" && (

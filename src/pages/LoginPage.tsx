@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import useAuthStore from "../store/authStore";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 function LoginPage() {
   const [name, setName] = useState<string>("");
@@ -9,35 +12,35 @@ function LoginPage() {
 
   const handleLogin = (): void => {
     login(name);
-    navigate("/claims"); 
+    navigate("/claims");
   };
 
   return (
     <div className="max-w-md mx-auto mt-10">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-        <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white text-center">
+      <div className="bg-white dark:bg-[#0f172a] p-8 rounded-xl shadow-sm border border-border">
+        <h2 className="mb-6 text-2xl font-bold text-foreground text-center">
           Login
         </h2>
-        
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+
+        <div className="mb-4 grid gap-2">
+          <Label htmlFor="name" className="text-foreground">
             Your Name
-          </label>
-          <input 
-            value={name} 
+          </Label>
+          <Input
+            id="name"
+            value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter your name to login..."
-            className="w-full rounded-md border border-gray-300 dark:border-gray-600 p-2.5 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
         </div>
-        
-        <button 
-          onClick={handleLogin} 
+
+        <Button
+          onClick={handleLogin}
           disabled={name.trim() === ""}
-          className="w-full mt-2 rounded-md bg-blue-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
+          className="w-full mt-2"
         >
           Sign In
-        </button>
+        </Button>
       </div>
     </div>
   );
