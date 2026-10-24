@@ -74,8 +74,6 @@ function DashboardPage() {
       category: values.category,
       status: values.type,
       location: values.location.trim(),
-      reportedAt: new Date().toISOString(),
-      reportedBy: 1,
     });
   };
 

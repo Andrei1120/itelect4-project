@@ -8,7 +8,7 @@ import ClaimBadge from "../components/ClaimBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { fetchClaims, createClaim, fetchItems } from "../api/client";
+import { fetchClaims, createClaim, fetchItems, API_URL } from "../api/client";
 
 function ClaimsPage() {
   const queryClient = useQueryClient();
@@ -36,7 +36,7 @@ function ClaimsPage() {
   });
 
   // 1. READ: Fetch claims list with useQuery
-  const { data, isPending, isError, error } = useQuery<ApiClaim[]>({
+  const { data = [], isPending, isError, error } = useQuery<ApiClaim[]>({
     queryKey: ["claims"],
     queryFn: fetchClaims,
   });
@@ -71,7 +71,7 @@ function ClaimsPage() {
   if (isError) {
     return (
       <div className="rounded-lg bg-red-50 dark:bg-red-900/30 p-4 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800">
-        {error.message} -- is json-server running on port 3001?
+        {error.message} -- tried {API_URL}/api/claims
       </div>
     );
   }

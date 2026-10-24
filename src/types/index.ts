@@ -87,14 +87,61 @@ export const ClaimStatus = {
 
 export type ClaimStatus = (typeof ClaimStatus)[keyof typeof ClaimStatus];
 
-// ===== SESSION 7: API TYPES DERIVED WITH OMIT & INTERSECTION =====
-// JSON has no Date, and json-server writes ids as strings.
-export type ApiLostFoundItem = Omit<LostFoundItem, "id" | "reportedAt"> & {
+// ===== SESSION 10: Derived types matching the real API =====
+export interface Course {
+  code: string;
+  title: string;
+  units: number;
+  semester: string;
+}
+
+export interface Submission {
+  id: number;
+  studentId: number;
+  courseCode: string;
+  repoUrl: string;
+  submittedAt: Date;
+  score?: number;
+}
+
+export type ApiSubmission = Omit<
+  Submission,
+  "id" | "studentId" | "submittedAt"
+> & {
+  id: string; // 24 hex characters, from MongoDB's _id
+  studentId: string; // the owner's _id, also 24 hex characters
+  submittedAt: string; // an ISO string, never a Date object
+};
+
+export type NewSubmission = Pick<Submission, "courseCode" | "repoUrl">;
+
+export type ApiUser = Omit<User, "id"> & {
   id: string;
+};
+
+export interface AuthReply {
+  token: string;
+  user: ApiUser;
+}
+
+export type ApiLostFoundItem = Omit<
+  LostFoundItem,
+  "id" | "reportedBy" | "reportedAt"
+> & {
+  id: string;
+  reportedBy?: string;
   reportedAt: string; // ISO string over the wire
 };
 
-export type NewLostFoundItem = Omit<ApiLostFoundItem, "id">;
+export type NewLostFoundItem = Pick<
+  LostFoundItem,
+  "title" | "description" | "type" | "location"
+> & {
+  category?: string;
+  status?: "lost" | "found" | "claimed";
+  reportedAt?: string;
+  reportedBy?: number | string;
+};
 
 export type ApiClaim = Omit<Claim, "id" | "claimedAt" | "verifiedAt"> & {
   id: string;
