@@ -1,28 +1,37 @@
-# Lost and Found System
+# I‑Telec t4 – Frontend (GT5)
 
-A campus Lost and Found management system built with React and TypeScript, allowing students and security admins to report lost or found items, manage claims, and verify item ownership securely.
+## Quick start
+1. **Copy** `.env.example` → `.env` in the **frontend** folder and set:
+   - `VITE_API_URL` = `https://itelect4-backend-xxxx.vercel.app` (replace `xxxx` with your Vercel backend sub‑domain).
+2. Install dependencies:
+   ```powershell
+   npm install
+   ```
+3. **Run locally** (development server):
+   ```powershell
+   npm run dev
+   ```
+   Open <http://localhost:5173> to see the UI.
+4. **Build for production** (optional, Vercel does this automatically):
+   ```powershell
+   npm run build
+   ```
+5. **Deploy to Vercel**:
+   - Push the code to GitHub (branch `gt4-part2`).
+   - Vercel will detect the repo and build it automatically.
+   - Set the environment variable `VITE_API_URL` in the Vercel dashboard (Production) to point to the live backend URL.
 
-## Interfaces and Types Defined
+## What this repo contains
+- React + Vite front‑end.
+- TanStack Query for API calls.
+- React Hook Form + Zod for validation.
+- Pages: Register, Login, Dashboard, Courses, Submissions, Items, etc.
+- Uses the **backend** you built in GT4 (the Express server).
 
-The following core interfaces and utility types form the foundation of our data model:
+## Deploy status (GT5)
+- **Backend URL**: `https://itelect4-backend-xxxx.vercel.app`
+- **Frontend URL**: `https://itelect4-project-xxxx.vercel.app`
+- Tag: `gt5`
 
-- **`User`**: Represents a system user, containing their role and active status.
-- **`LostFoundItem`**: Represents an item that has been reported lost or found, including its location and reporting details.
-- **`Claim`**: Represents a claim made by a user on a specific item, tracking its verification status.
-- **`Role`**: Enum defining user roles (`Student`, `SecurityAdmin`).
-- **`ClaimStatus`**: Enum for the lifecycle of a claim (`Pending`, `Approved`, `Rejected`, `Resolved`).
-- **Utility Types**: Includes `ApiResponse<T>`, `UserUpdate`, `ItemPreview`, `PublicClaim`, `RoleCount`, and `ItemWithReporter`.
-
-## How to Install and Run
-
-First, install the project dependencies:
-```bash
-npm install
-```
-
-To run the React development server:
-```bash
-npm run dev
-```
-
-*(Note: If you need to execute standalone TypeScript files from earlier stages, you can use `npx ts-node src/sample.ts` or `src/index.ts` if applicable).*
+## License
+MIT © 2026 Your Name

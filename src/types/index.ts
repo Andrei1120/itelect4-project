@@ -150,3 +150,15 @@ export type ApiClaim = Omit<Claim, "id" | "claimedAt" | "verifiedAt"> & {
 };
 
 export type NewClaim = Omit<ApiClaim, "id">;
+
+// ===== GT5: AI reply type =====
+// Must match the ReplySchema in itelect4-backend/src/routes/ai.ts exactly.
+export type AiUrgency = "low" | "medium" | "high";
+
+export interface AiReply {
+  summary: string;
+  urgencyLevel: AiUrgency;
+  suggestedCategories: string[];
+  nextSteps: string[];
+  encouragement: string;
+}
