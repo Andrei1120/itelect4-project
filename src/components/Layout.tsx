@@ -75,6 +75,10 @@ function Layout() {
               <span className="text-lg">📊</span>
               <span>Reports & Claims</span>
             </NavLink>
+            <NavLink to="/ai" className={navClass}>
+              <span className="text-lg">🤖</span>
+              <span>AI Assistant</span>
+            </NavLink>
             <button
               onClick={() => {
                 setSearchTerm("");

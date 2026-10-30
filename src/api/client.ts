@@ -8,6 +8,7 @@ import type {
   NewLostFoundItem,
   ApiClaim,
   NewClaim,
+  AiReply,
 } from "../types/index";
 import useAuthStore from "../store/authStore";
 
@@ -140,3 +141,12 @@ export function createClaim(newClaim: NewClaim): Promise<ApiClaim> {
     body: JSON.stringify(newClaim),
   });
 }
+
+// ---- AI route (GT5) ----
+export function askAi(prompt: string): Promise<AiReply> {
+  return request<AiReply>("/api/ai", {
+    method: "POST",
+    body: JSON.stringify({ prompt }),
+  });
+}
+

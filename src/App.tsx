@@ -11,6 +11,7 @@ import RegisterPage from "./pages/RegisterPage";
 import SubmissionsPage from "./pages/SubmissionsPage";
 import ClaimsPage from "./pages/ClaimsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import AiAssistantPage from "./pages/AiAssistantPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route element={<ProtectedRoute />}> {/* <-- the guard */}
           <Route path="submissions" element={<SubmissionsPage />} />
           <Route path="claims" element={<ClaimsPage />} />
+          <Route path="ai" element={<AiAssistantPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
